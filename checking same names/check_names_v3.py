@@ -2,7 +2,7 @@ import random, time, datetime
 
 start_time = time.time()
 
-filepath = r"C:\Users\shoc71\Desktop\mystorbius\2._Profile_Maker\txt_folder\all_names.txt"
+filepath = r"C:\Users\shoc71\Desktop\all_names.txt"
 
 print(f"\nThis program has started on {datetime.datetime.now()}\n")
 

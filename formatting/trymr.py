@@ -1,0 +1,1 @@
+f = "this is a sentence\n I am trying to strip it of \t"

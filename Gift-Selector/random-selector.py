@@ -4,12 +4,12 @@ import random
 GIFT_LIST = "gift-list.txt"
 COUNTER = 0
 NUMBER_OF_RUNS = 0
-FINISHED_RUNS = 4
+FINISHED_RUNS = 14
 
 # Additonal Lists
 size = ["Big",'Normal','Small','Tiny','Biggest','Smallest','Micro']
 quantity = ['All','Half','Two','Dozen','-1','Three',"Four"]
-quality = ['Cheap','Expensive','Dollar',"Live"]
+quality = ['Cheap','Expensive','Dollar',"Live","Plastic","Metal","Empty",'Cover','Heavy',"Light"]
 
 alist = []
 dup_list =[]
@@ -36,7 +36,7 @@ def random_selector(selected_txt_list):
     elif random_number_selector == 2:
         alist.append(f"{COUNTER}. {random.choice(size)} {random_line.title()}")
     elif random_number_selector == 3:
-        alist.append(f"{COUNTER}. {random.choice(quantity)} {random_line.title()}")
+        alist.append(f"{COUNTER}. {random.choice(quantity)} {random_line.title()}(s)")
     elif random_number_selector == 4:
         alist.append(f"{COUNTER}. {random.choice(quality)} {random_line.title()}")
     # return random_line

@@ -12,6 +12,7 @@ money gun
 cheese slicer
 butter slicer
 food blender
+shopping cart
 blender
 potato shaped as a soap
 groceries

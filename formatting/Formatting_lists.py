@@ -1,7 +1,7 @@
 list1 = []
 
-filepath = r"C:\Users\Sonu.Singh\Desktop\temp-file-jap-names.txt"
-filepath_dis = r"C:\Users\Sonu.Singh\Desktop\output_file_jap.txt"
+filepath = r"C:\Users\exe\Desktop\temp-file-jap-names.txt"
+filepath_dis = r"C:\Users\exe\Desktop\output_file_jap.txt"
 
 f = open (filepath, encoding="utf-8")
 output_txt = open(filepath_dis, mode='w',encoding="utf-8")

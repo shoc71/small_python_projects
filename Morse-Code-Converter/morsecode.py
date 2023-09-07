@@ -2,7 +2,7 @@ str_morse = ""
 string = ""
 count = 1
 
-user_input = input(f"{count}. Short or Long? [q to quit] / [c to check]: ")
+user_input = input(f"{count}. Short or Long? [q to quit] / [c to clear] / [cc to convert]: ")
 
 # function converting morse code into a letter
 def morse_decoder(morse_code_text, display):
@@ -44,11 +44,16 @@ while user_input != "quit":
         print(str_morse)
     
     # user converting morse code to string
-    elif user_input == "check" or user_input == "c":
+    elif user_input == "convert" or user_input == "cc":
         # morse_decoder(str_morse, str_ing)
         # morse_decoder(str_morse, string)
         string += morse_decoder(str_morse, string) # I can't believe this works
         print(string)
+        print("morse_code_text reset!")
+        str_morse = ""
+    
+    # user quitting code
+    elif user_input == "clear" or user_input == "c":
         print("morse_code_text reset!")
         str_morse = ""
     
@@ -65,7 +70,7 @@ while user_input != "quit":
 
     # counter
     count += 1
-    user_input = input(f"{count}. Short or Long? [q to quit] / [c to check]: ")
+    user_input = input(f"{count}. Short or Long? [q to quit] / [c to clear] / [cc to convert]: ")
 
 # final word for the code
 print(f"{(count + 1)}. The final word is {string}")

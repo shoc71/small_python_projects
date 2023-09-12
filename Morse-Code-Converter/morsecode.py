@@ -24,12 +24,10 @@ def morse_decoder(morse_code_text, display):
 
     # checking if morse code exists or not
     if morse_code_text in morse_dict:
-        display = morse_code.replace(morse_code, morse_dict[morse_code])
+        display = morse_dict[morse_code] #.replace() was a mistake that is easily fixable
     else:
         print("No morse_code like that exists. Please refer to the 'Internationl Morse Code'")
-        display = ""
-    
-    # return
+        
     return display
 
 while user_input != "quit":

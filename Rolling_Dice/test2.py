@@ -36,6 +36,11 @@ class Dice:
     def subtract_dice_value(self, options : List[int], value:int) -> None:
         self.dice_options = [(x - value) for x in options]
 
+    def bonus_calculation(self, list):
+        if list.count(list[0]) == len(list):
+                print('bonus dickkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
+                pass
+
 class DicePrinter:
     @staticmethod
     def print_options(options: List[int]) -> None:
@@ -61,23 +66,19 @@ class DiceRecord:
             rolled_numbers = dice.roll_dice(times)
             rolled_numbers = [round(x,0) for x in rolled_numbers]
             self.records.extend(rolled_numbers)
+            # bonus for same number rolling
+            if rolled_numbers.count(rolled_numbers[0]) == len(rolled_numbers):
+                bonus_value = int(sum(rolled_numbers) / (2 * len(rolled_numbers)))
+                print('bonus point(s) - ',bonus_value)
+                self.records.append(bonus_value)
             total_score = self.calculate_total_score()
             self.sentence = f"Rolled: {rolled_numbers}. All Rolls: {self.records}. Total Score: {total_score}"
-            # print(self.sentence)
         elif action == "zero_ing":
             dice.zero_ing(dice.dice_options)
         elif action == "negative":
             dice.negative_dice_options(dice.dice_options)
         elif action == "set_normal":
             dice.normal_dice_options(dice.get_original_dice_options())
-        # elif action == "multiply":
-        #     dice.multiply_dice_value(dice.dice_options, value)
-        # elif action == "divide":
-        #     dice.divide_dice_value(dice.dice_options, value)
-        # elif action == "add":
-        #     dice.add_dice_value(dice.dice_options, value)
-        # elif action == "subtract":
-        #     dice.subtract_dice_value(dice.dice_options, value)
         elif (action in self.math_control) and (value >= 10):
             value = 10
             print("this is not allowed, restore to ",value)
@@ -89,6 +90,12 @@ class DiceRecord:
         
         print(self.sentence + f" Action_Rolled {action}.") #figure out a way to include previous change
 
+class Card(Dice): #idea of this is use to the functions defined in the dice class above and manipulate them as seen fit
+    def __init__(self) -> None:
+        pass
+
+    def switch_player(self) -> None:
+        pass
 
 def main() -> None:
     dice_r6_1 = [1, 2, 3, 4, 5, 6]

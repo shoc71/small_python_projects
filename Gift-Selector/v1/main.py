@@ -1,6 +1,6 @@
+# imports
 import pygame
 import random
-import os
 
 # Constants
 GIFT_LIST = 'gifts.txt'
@@ -10,6 +10,12 @@ SCROLLBAR_COLOR = (150, 150, 150)
 SCROLLBAR_BUTTON_COLOR = (100, 100, 100)
 ITEM_HEIGHT = 30  # Height of each item in the menu
 SCROLL_SPEED = 20  # Speed of scrolling
+
+def unique_list(options):
+    return set(options)
+
+def shuffle_contents(options):
+    return random.shuffle(options)
 
 def list_to_string(selected_list):
     # Convert a list to a string
@@ -21,18 +27,15 @@ def list_to_string(selected_list):
     except ValueError:
         print("Invalid input! Please enter a valid list.")
 
-def shuffle_contents(options):
-    return random.shuffle(options)
-
 def read_notepad(notepad): 
     # Reading contents of the notepad and shuffling them
     try:
         with open(notepad, 'r', encoding='utf-8') as file:
             lines = file.readlines()
-            print("Number of lines read from the file:", len(lines))
+            print("Number of lines read from the file: ", len(lines))
             shuffle_contents(lines)
-            unique_lines = set(lines)
-            print("Number of lines after shuffling:", len(unique_lines))
+            unique_lines = unique_list(lines)
+            print("Number of lines after shuffling: ", len(unique_lines))
             start_index, end_index = 0, len(unique_lines)
             return list(unique_lines)[start_index : end_index + 1]
     except FileNotFoundError:
@@ -43,7 +46,6 @@ def save_top_10(options):
     with open('top_10.txt', 'w') as file:
         file.write(''.join(options[:10]).title().strip())
     return "Top 10 have been saved."
-
 
 def display_on_gui(options):
     # Starting pygame

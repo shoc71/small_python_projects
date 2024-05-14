@@ -400,7 +400,7 @@ small dog pool
 kiddie pool
 tarp
 music stand
-music sheet(s) [empty]
+empty music sheet(s)
 towels
 paint brush
 suitcase
@@ -596,6 +596,7 @@ caneo
 gold apple
 chain mail
 bamboo
+face cream
 plant seed(s)
 binoculars
 shovel

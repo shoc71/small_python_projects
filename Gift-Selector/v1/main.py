@@ -15,17 +15,19 @@ def unique_list(options):
     return set(options)
 
 def shuffle_contents(options):
-    return random.shuffle(options)
+    random.shuffle(options)
 
 def list_to_string(selected_list):
     # Convert a list to a string
-    if selected_list == None:
+    if selected_list is None:
         print("No valid list found.")
+        return ""
     try:
         string = ' '.join(str(list_prime) for list_prime in selected_list)
         return string
     except ValueError:
         print("Invalid input! Please enter a valid list.")
+        return ""
 
 def read_notepad(notepad): 
     # Reading contents of the notepad and shuffling them
@@ -36,15 +38,15 @@ def read_notepad(notepad):
             shuffle_contents(lines)
             unique_lines = unique_list(lines)
             print("Number of lines after shuffling: ", len(unique_lines))
-            start_index, end_index = 0, len(unique_lines)
-            return list(unique_lines)[start_index : end_index + 1]
+            return list(unique_lines)
     except FileNotFoundError:
         print("File not Found!")
+        return []
 
 def save_top_10(options):
     # Proceed with saving the top 10 options
     with open('top_10.txt', 'w') as file:
-        file.write(''.join(options[:10]).title().strip())
+        file.write('\n'.join(option.strip().title() for option in options[:10]))
     return "Top 10 have been saved."
 
 def display_on_gui(options):
@@ -77,7 +79,6 @@ def display_on_gui(options):
     # Message Text
     message_text = ""
     message_font = pygame.font.SysFont("Arial", 20)
-    # message_color = (255, 255, 0)
     message_alpha = 255  # Initial alpha value
     message_display_time = 0
 
@@ -90,11 +91,11 @@ def display_on_gui(options):
         window.fill(background_color)
 
         # Draw title
-        title_surface = bold_font.render(f"{len(options) - 2} Gift Options Ranked at Random", True, text_color)
+        title_surface = bold_font.render(f"{len(options)} Gift Options Ranked at Random", True, text_color)
         title_height = title_surface.get_height()  # Get the height of the title surface
         window.blit(title_surface, ((window_width - title_surface.get_width()) // 2, 10 - scroll_offset))
 
-        # Draw save top 50 button
+        # Draw save top 10 button
         save_top_10_text = bold_font.render("Save Top 10", True, BLACK)
         save_top_10_rect = save_top_10_text.get_rect(bottomright=(window_width - 22, window_height - 90))
         save_top_10_color = (255, 255, 0)  # Default color
@@ -148,13 +149,19 @@ def display_on_gui(options):
             pygame.draw.rect(window, SCROLLBAR_COLOR, (window_width - 20, 0, 20, window_height))
             pygame.draw.rect(window, SCROLLBAR_BUTTON_COLOR, (window_width - 20, scrollbar_offset, 20, scrollbar_height))
 
+        # Converting strings into title case
         for idx, option in enumerate(options, start=1):
-            option_text = option.strip()  # Convert entire string to title case
+            option_text = option.strip()  # Trim whitespace from the option text
             words = option_text.split()
+            
             for i, word in enumerate(words):
-                if not word.isupper():
+                if word.lower().endswith("(s)"):
+                    base_word = word[:-3]
+                    words[i] = f"{base_word.title()}(s)"
+                elif not word.isupper():
                     words[i] = word.title()  # Convert non-uppercase words to title case
-            option_text = list_to_string(words)
+            
+            option_text = ' '.join(words)  # Join the words back into a string
             numbered_text = f"{idx}. {option_text}"
             bold_text_surface = font.render(numbered_text, True, text_color)
 
@@ -175,9 +182,11 @@ def display_on_gui(options):
                 elif event.button == 1:  # Left mouse button
                     if save_top_10_rect.collidepoint(event.pos):
                         message_text = save_top_10(options)
+                        message_display_time = pygame.time.get_ticks()
                     elif refresh_button_rect.collidepoint(event.pos):
                         shuffle_contents(options)
                         message_text = "Contents of the list have been refreshed."
+                        message_display_time = pygame.time.get_ticks()
                     elif exit_button_rect.collidepoint(event.pos):
                         running = False
                     elif window_width - 20 <= event.pos[0] <= window_width:

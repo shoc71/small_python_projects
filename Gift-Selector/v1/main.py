@@ -4,173 +4,158 @@ import random
 
 # Constants
 GIFT_LIST = 'gifts.txt'
+ITEM_HEIGHT = 30  # Height of each item in the menu
+SCROLL_SPEED = 20  # Speed of scrolling
+MIN_WINDOW_SIZE = (300, 400)
+MAX_WINDOW_SIZE = (1050, 1000)
+
+# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 SCROLLBAR_COLOR = (150, 150, 150)
 SCROLLBAR_BUTTON_COLOR = (100, 100, 100)
-ITEM_HEIGHT = 30  # Height of each item in the menu
-SCROLL_SPEED = 20  # Speed of scrolling
+BUTTON_COLOR_SAVE = (255, 255, 0)
+BUTTON_COLOR_SAVE_HOVER = (255, 255, 150)
+BUTTON_COLOR_REFRESH = (0, 255, 0)
+BUTTON_COLOR_REFRESH_HOVER = (150, 255, 150)
+BUTTON_COLOR_EXIT = (255, 0, 0)
+BUTTON_COLOR_EXIT_HOVER = (255, 150, 150)
+MESSAGE_COLOR = (255, 255, 0)
 
 def unique_list(options):
-    return set(options)
+    """Return a unique set of options."""
+    return list(set(options))
 
 def shuffle_contents(options):
+    """Shuffle the options list."""
     random.shuffle(options)
 
 def list_to_string(selected_list):
-    # Convert a list to a string
+    """Convert a list to a single string."""
     if selected_list is None:
         print("No valid list found.")
         return ""
     try:
-        string = ' '.join(str(list_prime) for list_prime in selected_list)
-        return string
+        return ' '.join(str(item) for item in selected_list)
     except ValueError:
         print("Invalid input! Please enter a valid list.")
         return ""
 
-def read_notepad(notepad): 
-    # Reading contents of the notepad and shuffling them
+def read_notepad(notepad):
+    """Read the contents of a notepad file and return a shuffled unique list of lines."""
     try:
         with open(notepad, 'r', encoding='utf-8') as file:
             lines = file.readlines()
-            print("Number of lines read from the file: ", len(lines))
+            print(f"Number of lines read from the file: {len(lines)}")
             shuffle_contents(lines)
             unique_lines = unique_list(lines)
-            print("Number of lines after shuffling: ", len(unique_lines))
-            return list(unique_lines)
+            print(f"Number of lines after shuffling: {len(unique_lines)}")
+            return unique_lines
     except FileNotFoundError:
-        print("File not Found!")
+        print("File not found!")
         return []
 
 def save_top_10(options):
-    # Proceed with saving the top 10 options
+    """Save the top 10 options to a file."""
+    top_10 = [option.strip().title() for option in options[:10]]
     with open('top_10.txt', 'w') as file:
-        file.write('\n'.join(option.strip().title() for option in options[:10]))
+        file.write('\n'.join(top_10))
     return "Top 10 have been saved."
 
-def display_on_gui(options):
-    # Starting pygame
-    pygame.init()
+def convert_to_title_case(option):
+    """Convert each word in the option to title case, preserving '(s)' suffix."""
+    words = option.strip().split()
+    for i, word in enumerate(words):
+        if word.lower().endswith("(s)"):
+            base_word = word[:-3]
+            words[i] = f"{base_word.title()}(s)"
+        elif not word.isupper():
+            words[i] = word.title()
+    return ' '.join(words)
 
-    # Define minimum and maximum window size
-    MIN_WINDOW_SIZE = (300, 400)
-    MAX_WINDOW_SIZE = (1050, 1000)
+def draw_button(window, font, text, rect, base_color, hover_color, is_hover):
+    """Draw a button on the window."""
+    color = hover_color if is_hover else base_color
+    pygame.draw.rect(window, color, rect)
+    text_surface = font.render(text, True, BLACK)
+    window.blit(text_surface, rect)
+
+def display_on_gui(options):
+    """Display the options on a Pygame GUI with scrolling and buttons."""
+    pygame.init()
     
-    # Window Parameters
-    window_height = 550  # Increased height to accommodate the title
+    window_height = 550
     window_width = 550
     window = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE)
     pygame.display.set_caption("Gift Options Ranked at Random")
 
-    # Display Font
     font = pygame.font.SysFont("Arial", 24)
     bold_font = pygame.font.SysFont("Arial", 24, bold=True)
+    message_font = pygame.font.SysFont("Arial", 20)
 
-    # Colors Display
     text_color = WHITE
     background_color = BLACK
 
-    # Variables for Scrolling
     scroll_offset = 0
     is_scrolling = False
     scroll_start_pos = 0
 
-    # Message Text
     message_text = ""
-    message_font = pygame.font.SysFont("Arial", 20)
-    message_alpha = 255  # Initial alpha value
+    message_alpha = 255
     message_display_time = 0
 
-    # Clock for managing FPS
     clock = pygame.time.Clock()
-
-    # Main loop
     running = True
+
     while running:
         window.fill(background_color)
 
-        # Draw title
         title_surface = bold_font.render(f"{len(options)} Gift Options Ranked at Random", True, text_color)
-        title_height = title_surface.get_height()  # Get the height of the title surface
+        title_height = title_surface.get_height()
         window.blit(title_surface, ((window_width - title_surface.get_width()) // 2, 10 - scroll_offset))
 
-        # Draw save top 10 button
-        save_top_10_text = bold_font.render("Save Top 10", True, BLACK)
-        save_top_10_rect = save_top_10_text.get_rect(bottomright=(window_width - 22, window_height - 90))
-        save_top_10_color = (255, 255, 0)  # Default color
-        if save_top_10_rect.collidepoint(pygame.mouse.get_pos()):
-            save_top_10_color = (255, 255, 150)  # Change color on hover
-        pygame.draw.rect(window, save_top_10_color, save_top_10_rect)
-        window.blit(save_top_10_text, save_top_10_rect)
+        save_top_10_text = "Save Top 10"
+        refresh_button_text = "Refresh"
+        exit_button_text = "Exit"
+        
+        save_top_10_rect = pygame.Rect(window_width - 150, window_height - 120, 130, 40)
+        refresh_button_rect = pygame.Rect(window_width - 150, window_height - 80, 130, 40)
+        exit_button_rect = pygame.Rect(window_width - 150, window_height - 40, 130, 40)
+        
+        draw_button(window, bold_font, save_top_10_text, save_top_10_rect, BUTTON_COLOR_SAVE, BUTTON_COLOR_SAVE_HOVER, save_top_10_rect.collidepoint(pygame.mouse.get_pos()))
+        draw_button(window, bold_font, refresh_button_text, refresh_button_rect, BUTTON_COLOR_REFRESH, BUTTON_COLOR_REFRESH_HOVER, refresh_button_rect.collidepoint(pygame.mouse.get_pos()))
+        draw_button(window, bold_font, exit_button_text, exit_button_rect, BUTTON_COLOR_EXIT, BUTTON_COLOR_EXIT_HOVER, exit_button_rect.collidepoint(pygame.mouse.get_pos()))
 
-        # Draw refresh button
-        refresh_button_text = bold_font.render("Refresh", True, BLACK)
-        refresh_button_rect = refresh_button_text.get_rect(bottomright=(window_width - 22, window_height - 50))
-        refresh_button_color = (0, 255, 0)  # Default color
-        if refresh_button_rect.collidepoint(pygame.mouse.get_pos()):
-            refresh_button_color = (150, 255, 150)  # Change color on hover
-        pygame.draw.rect(window, refresh_button_color, refresh_button_rect)
-        window.blit(refresh_button_text, refresh_button_rect)
-
-        # Draw exit button
-        exit_button_text = bold_font.render("Exit", True, WHITE)
-        exit_button_rect = exit_button_text.get_rect(bottomright=(window_width - 22, window_height - 10))
-        exit_button_color = (255, 0, 0)  # Default color
-        if exit_button_rect.collidepoint(pygame.mouse.get_pos()):
-            exit_button_color = (255, 150, 150)  # Change color on hover
-        pygame.draw.rect(window, exit_button_color, exit_button_rect)
-        window.blit(exit_button_text, exit_button_rect)
-
-        # Draw message
         if message_text:
-            message_surface = message_font.render(message_text, True, (255, 255, 0, message_alpha))
-            window.blit(message_surface, ((window_width - message_surface.get_width()) - 22, window_height - (window_height - 50)))
-
-            # Update message alpha and display time
-            if pygame.time.get_ticks() - message_display_time > 3000:  # 3 seconds
-                message_alpha -= 3  # Adjust this value to control fade speed
+            message_surface = message_font.render(message_text, True, (*MESSAGE_COLOR, message_alpha))
+            window.blit(message_surface, (window_width - 325, 50)) # (10, window_height - 50)
+            if pygame.time.get_ticks() - message_display_time > 3000:
+                message_alpha -= 3
                 if message_alpha <= 0:
-                    message_text = ""  # Clear message when fully faded
-                    message_alpha = 255  # Reset alpha for next message
+                    message_text = ""
+                    message_alpha = 255
             else:
-                message_display_time = pygame.time.get_ticks()  # Update display time
+                message_display_time = pygame.time.get_ticks()
 
-        # Draw options
         height_adjustment = title_height + 20
         total_height = len(options) * ITEM_HEIGHT
         max_scroll = max(total_height - window_height, 0)
         y = height_adjustment - scroll_offset
 
-        # Draw scrollbar
         if max_scroll > 0:
-            scrollbar_height = (window_height * window_height) / (len(options) * ITEM_HEIGHT)
+            scrollbar_height = (window_height * window_height) / total_height
             scrollbar_offset = (scroll_offset * (window_height - scrollbar_height)) / max_scroll
             pygame.draw.rect(window, SCROLLBAR_COLOR, (window_width - 20, 0, 20, window_height))
             pygame.draw.rect(window, SCROLLBAR_BUTTON_COLOR, (window_width - 20, scrollbar_offset, 20, scrollbar_height))
 
-        # Converting strings into title case
         for idx, option in enumerate(options, start=1):
-            option_text = option.strip()  # Trim whitespace from the option text
-            words = option_text.split()
-            
-            for i, word in enumerate(words):
-                if word.lower().endswith("(s)"):
-                    base_word = word[:-3]
-                    words[i] = f"{base_word.title()}(s)"
-                elif not word.isupper():
-                    words[i] = word.title()  # Convert non-uppercase words to title case
-            
-            option_text = ' '.join(words)  # Join the words back into a string
+            option_text = convert_to_title_case(option)
             numbered_text = f"{idx}. {option_text}"
-            bold_text_surface = font.render(numbered_text, True, text_color)
-
-            # Check if the option is within the visible window range
-            if y < window_height - ITEM_HEIGHT and (y + ITEM_HEIGHT) > 0:
-                window.blit(bold_text_surface, (10, y))
+            text_surface = font.render(numbered_text, True, text_color)
+            if y < window_height - ITEM_HEIGHT and y + ITEM_HEIGHT > 0:
+                window.blit(text_surface, (10, y))
             y += ITEM_HEIGHT
 
-        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -191,39 +176,32 @@ def display_on_gui(options):
                         running = False
                     elif window_width - 20 <= event.pos[0] <= window_width:
                         if max_scroll > 0:
-                            scrollbar_height = window_height * window_height / (len(options) * ITEM_HEIGHT)
+                            scrollbar_height = window_height * window_height / total_height
                             scrollbar_offset = scroll_offset * (window_height - scrollbar_height) / max_scroll
                             if scrollbar_offset <= event.pos[1] <= scrollbar_offset + scrollbar_height:
                                 is_scrolling = True
                                 scroll_start_pos = event.pos[1] - scrollbar_offset
             elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:  # Left mouse button
+                if event.button == 1:
                     is_scrolling = False
             elif event.type == pygame.MOUSEMOTION:
                 if is_scrolling:
                     new_scrollbar_offset = event.pos[1] - scroll_start_pos
                     if max_scroll > 0:
-                        scrollbar_height = window_height * window_height / (len(options) * ITEM_HEIGHT)
+                        scrollbar_height = window_height * window_height / total_height
                         scrollbar_offset = min(max(new_scrollbar_offset, 0), window_height - scrollbar_height)
                         scroll_offset = int(scrollbar_offset / (window_height - scrollbar_height) * max_scroll)
             elif event.type == pygame.VIDEORESIZE:
-                # Limit window size within the specified range
                 new_width, new_height = event.size
-                new_width = max(MIN_WINDOW_SIZE[1], min(new_width, MAX_WINDOW_SIZE[1]))
-                new_height = max(MIN_WINDOW_SIZE[0], min(new_height, MAX_WINDOW_SIZE[0]))
-                window_width = new_width
-                window_height = new_height
+                window_width = max(MIN_WINDOW_SIZE[0], min(new_width, MAX_WINDOW_SIZE[0]))
+                window_height = max(MIN_WINDOW_SIZE[1], min(new_height, MAX_WINDOW_SIZE[1]))
                 window = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE)
-                max_scroll = max((len(options) * ITEM_HEIGHT) - window_height, 0)
+                max_scroll = max(total_height - window_height, 0)
 
-        # Adjust scroll offset to stay within range
-        scroll_offset = max(min(scroll_offset, max_scroll), 0)
-
+        scroll_offset = max(0, min(scroll_offset, max_scroll))
         pygame.display.flip()
+        clock.tick(60)
 
-        clock.tick(60)  # Limit to 60 FPS
-
-    # Quit pygame
     pygame.quit()
 
 def main():

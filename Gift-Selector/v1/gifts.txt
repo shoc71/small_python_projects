@@ -108,15 +108,31 @@ cargo pants
 waterproof lunchbox
 waterproof lunch bag
 waterproof phone case
+globe
+tablet pen
+phone pen
+phone case
 trousers
 flowers
 chocolates
+wine glasses
+
 chips
+screen cleaner
 shoes
+table lamp
 vacuum
 magnets
 tickets to a concert
 movie tickets
+curler
+bird house
+bird seeds
+mug
+charity
+children crafts
+magnet book
+server
 car
 tape
 puppy
@@ -473,9 +489,23 @@ anime sword
 videogame
 voucher
 diaper
+cufflins
 drone
+metronome
+percussion box
+musical triangle
 iron man helmet
 quad bike
+bell
+punching bag
+boxing glove
+stadium
+cough drops
+garbage bin
+wooden plank(s)
+pentent
+external hard disk
+laundry bin
 sculpture
 cotton
 gaming console

@@ -14,6 +14,32 @@ suitcase
 prison getup
 rope
 trash bin
+sheild
+pelvis
+face mask
+fire cracker
+tennis ball
+tent
+scanner
+winter jacket
+wig
+bomber
+dirt bike
+tennis racket
+tennis ball launcher
+lottery ticket
+swing set frame
+camera set with lens
+hover cart
+life raft
+hanger
+knight armor set
+swing set
+monocamy
+fake gun
+country flag
+metal sword
+knight statue
 giant mug
 vacuum 
 pendant

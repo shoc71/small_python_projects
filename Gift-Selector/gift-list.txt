@@ -1214,3 +1214,19 @@ bike
 dirtbike
 wheel
 diary
+fountain pen
+table lamp
+green screen
+wrenches
+screws
+nails
+power drill
+ladder
+paint
+paint roller
+paint container
+drywall
+ruler
+measuring tape
+ring
+wedding ring

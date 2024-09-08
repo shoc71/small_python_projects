@@ -66,7 +66,8 @@ if user_input in ["0", "Setting", "Set" , "Zero"]:
     print(f"\nHuman List BEFORE Unique check; {len(read_txtfile(GIFT_FILE))}" + "\n"
           f"Human List AFTER Unique check; {len(unique_check(read_txtfile(GIFT_FILE)))}")
     print(f"AI List BEFORE Unique check; {len(read_txtfile(GIFT_FILE_AI))}" + "\n"
-          f"AI List AFTER Unique check; {len(unique_check(read_txtfile(GIFT_FILE_AI)))}\n")
+          f"AI List AFTER Unique check; {len(unique_check(read_txtfile(GIFT_FILE_AI)))}")
+    print(f"Total unique count with both lists combined; {len(unique_check(read_txtfile(GIFT_FILE_AI))) + len(unique_check(read_txtfile(GIFT_FILE)))}\n")
     
 elif user_input in ["3", "No", "Quit", "None", "Three"]:
     print(f"\nUser has selected option -[None]-\n"

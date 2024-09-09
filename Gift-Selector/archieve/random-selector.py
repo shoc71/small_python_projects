@@ -8,8 +8,8 @@ FINISHED_RUNS = 14
 
 # Additonal Lists
 size = ["Big",'Normal','Small','Tiny','Biggest','Smallest','Micro']
-quantity = ['All','Half','Two','Dozen','-1','Three',"Four"]
-quality = ['Cheap','Expensive','Dollar',"Live","Plastic","Metal","Empty",'Cover','Heavy',"Light"]
+quantity = ['All','Half','Two','Dozen','-1','Three',"Four","Six-Pack"]
+quality = ['Cheap','Expensive','Dollar',"Live","Plastic","Metal","Empty",'Cover','Heavy',"Light","Baby"]
 
 alist = []
 dup_list =[]

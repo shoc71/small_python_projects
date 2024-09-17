@@ -6,7 +6,7 @@ import moviepy.editor
 # UNCHANGED BY Code BUT by USER
 INPUT_DIRECTORY = 'Input'
 MOVIE_EXTENSIONS = ["*.mp4", "*.mkv"]
-AUDIO_EXTENSIONS = [".mp3", ".wav", ".ogg"]
+AUDIO_EXTENSIONS = [".mp3"] #  + [".wav", ".ogg"]
 
 def video_to_audio_conversion(movie_extensions: list, audio_extensions: list):
     '''
